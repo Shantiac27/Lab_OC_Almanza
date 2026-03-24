@@ -3,9 +3,29 @@ build:
 	nasm -f elf p5.asm
 	ld -m elf_i386 p5.o -o ../../bin/practica5.exe ../../lib/libpc_io.a
 
-build2:
+buildA:
 	nasm -f elf p5.asm
 	ld -m elf_i386 p5a.o -o ../../bin/practica5.exe ../../lib/libpc_io.a
 
+buildB:
+	nasm -f elf p5.asm
+	ld -m elf_i386 p5b.o -o ../../bin/practica5.exe ../../lib/libpc_io.a
+
+buildC:
+	nasm -f elf p5.asm
+	ld -m elf_i386 p5c.o -o ../../bin/practica5.exe ../../lib/libpc_io.a
+
+buildD:
+	nasm -f elf p5.asm
+	ld -m elf_i386 p5d.o -o ../../bin/practica5.exe ../../lib/libpc_io.a
+
+buildE:
+	nasm -f elf p5.asm
+	ld -m elf_i386 p5e.o -o ../../bin/practica5.exe ../../lib/libpc_io.a
+
+buildF:
+	nasm -f elf p5.asm
+	ld -m elf_i386 p5f.o -o ../../bin/practica5.exe ../../lib/libpc_io.a
+	
 run:
 	./../../bin/practica5.exe
