@@ -9,14 +9,14 @@ _start:
     mov edx, ncad
 	call puts
 
-	mov bx, word[len]
+	mov ebx, word[len]
 	mov edx, cad
 	call capturar
 
     call getch
 	add al, '0'
 	call putchar
-	mov edx. ncad
+	mov edx, ncad
 	call puts
 
 	int	0x80        	; llamada al sistema - fin de programa

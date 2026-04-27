@@ -11,5 +11,21 @@ _start:
 	mov	eax, 1	    	; seleccionar llamada al sistema para fin de programa
 	int	0x80        	; llamada al sistema - fin de programa
 
+
+    ImpArreglo:
+        push ecx
+        push esi
+        mov ecx, 0
+        mov esi, 0
+        mov cl, dl 
+        .cicloCapArr:
+        mov , dword[eax+esi]
+
+        call itoa
+        inc esi
+        loop .cicloCapArr
+        pop esi
+        pop ecx
+
 section	.data
-    msg	db  'abcdefghijklmnopqrstuvwxyz0123456789',0xa,0 
+    ncad 
