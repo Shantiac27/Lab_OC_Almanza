@@ -6,96 +6,140 @@ section	.text
 	
 _start:             
 
-    mov edx, ncad
-	call puts
-
-	mov ebx, word[len]
-	mov edx, cad
-	call capturar
-
     call getch
-	add al, '0'
-	call putchar
+	call itoa
 	mov edx, ncad
 	call puts
 
+	mov bx, word[len]
+	mov edx, cad
+	call capturar
+	mov al, [nlin]
+	call putchar
+	call puts
+
+	mov al, [nlin]
+	call putchar
+
+	mov edx, cad
+	call Mayusculas
+	call puts
+	mov al, [nlin]
+	call putchar 
+	
+	mov edx, cad
+	call Minusculas
+	call puts
+
+	mov al, [nlin]
+	call putchar
+	call putchar
+
+	mov eax, 1          ; seleccionar llamada al sistema para fin de programa
 	int	0x80        	; llamada al sistema - fin de programa
 
 capturar:
-    push ecx
     push edx
-    push ebx
-	mov cx,bx
+	push cx
+	mov cx, bx
 	dec cx
-	mov bx, 0
 
 .ciclo:
-    
-	cmp cx, 1
-	je .salir
-
     call getch
 	cmp al, 0x7f
 	jne .guardar
-	cmp bx, 0
-	je .ciclo
 	call borrar
-	dec bx
 	jmp .ciclo
-
-.guardar:
-    cmp al, 10
-	je .salir
-	mov byte [edx + ebx], al
+	.guardar:
 	call putchar
-	inc bx
+	mov [edx], al
+	cmp al, 0xa
+	je .salir
+	inc edx
 	loop .ciclo
-
 .salir:
-    mov byte[edx + ebx],0
-	pop ebx
+	mov byte[edx],0
+	pop cx
 	pop edx
-    pop ecx
 	ret
 
 borrar:
     push ax 
-
 	mov al, 0x8
 	call putchar 
-
 	mov al, ' '
 	call putchar
-
 	mov al, 0x8
 	call putchar
-
 	pop ax
 	ret
 
+
+itoa:
+	push bx
+	mov bl, 100
+	mov ah, 0
+	div bl
+	mov bx, ax
+	add al, '0'
+	call putchar
+	mov al, ah
+	add al, '0'
+	call putchar
+
+	pop bx 
+	ret
+	
 Mayusculas:
     push ebx
 	push edx 
 	mov ebx , -1
 
-	.sig:
+	.sigMay:
 	    inc ebx 
 		mov al, [edx + ebx]
 		cmp al, 0
 		je .salir 
-		cmp al, 'a'
-		jnb .cmpz
-		jmp .sig
 
-	.cmpz:
-	    cmp al, 'z'
-		jnb .sig
+		cmp al, 'a'
+		jb .sigMay
+		cmp al, 'z'
+		ja .sigMay
 
 		sub al, 32
-		mov byte [edx + ebx], al
-		jmp .sig
+		mov [edx + ebx], al
+		jmp .sigMay
 
-	.
+	.salir:
+		pop edx
+		pop ebx
+		ret
+
+	
+Minusculas:
+	push ebx
+	push edx
+	mov ebx, -1
+
+	.sigMin:
+		inc ebx
+		mov al, [edx+ebx]
+		cmp al, 0
+		je .salir
+
+		cmp al, 'A'
+		jb .sigMin
+		cmp al, 'Z'
+		ja .sigMin
+
+		add al, 32
+		mov [edx+ebx], al
+		jmp .sigMin
+
+	.salir:
+		pop edx
+		pop ebx
+		ret
 
 section	.data
     ncad db 0xa, 'Cadena :',0
