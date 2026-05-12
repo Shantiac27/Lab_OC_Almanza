@@ -43,6 +43,8 @@ capturar:
 	push cx
 	mov cx, bx
 	dec cx
+	push bx 
+	mov bl, 0
 
 .ciclo:
     call getch
@@ -50,27 +52,36 @@ capturar:
 	jne .guardar
 	call borrar
 	jmp .ciclo
+
 	.guardar:
 	call putchar
 	mov [edx], al
 	cmp al, 0xa
 	je .salir
 	inc edx
+	inc bl
 	loop .ciclo
 .salir:
 	mov byte[edx],0
+	pop bx
 	pop cx
 	pop edx
 	ret
 
 borrar:
     push ax 
+	cmp bl, 0
+	je .regresar
 	mov al, 0x8
 	call putchar 
 	mov al, ' '
 	call putchar
 	mov al, 0x8
 	call putchar
+	dec edx
+	dec bl
+	inc cx
+	.regresar:
 	pop ax
 	ret
 
@@ -142,7 +153,7 @@ Minusculas:
 		ret
 
 section	.data
-    ncad db 0xa, 'Cadena :',0
+    ncad db 0xa, 'Cadena : ',0
 	nlin db 0xa
 	len db 64
 	cad times 64 db 0
