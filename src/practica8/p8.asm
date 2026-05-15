@@ -21,6 +21,17 @@ _start:
     mov al, 10
     call putchar
 
+	call ordenar
+
+	mov edx, ncad
+    call puts
+    mov eax, arr 
+    mov edx, 0
+    mov dl, byte[len]
+    call ImpArreglo
+    mov al, 10
+    call putchar
+
     mov eax, 1
     int 0x80
 
@@ -131,6 +142,65 @@ itoa:
 	pop ebx
 	ret
 
+ordenar:
+	push eax
+	push ebx
+	push edx
+	push ecx
+	push esi
+	push edi
+
+	mov esi, 0 ; valor de i
+
+	.ciclo1:
+	movzx eax,byte[len]
+	dec eax
+	cmp esi, eax
+	jge .fin
+
+	mov edi, esi ; valor de minimo
+
+	mov ebx, esi
+	inc ebx ; valor de j = i + 1
+
+
+	.ciclo2:
+	movzx eax, byte[len]
+	cmp ebx, eax
+	jge .intercambio
+	mov eax, [arr+ebx*4] 
+	mov edx, [arr+edi*4]
+	cmp eax, edx
+	jge .continuar
+	mov edi, ebx
+
+	.continuar:
+	inc ebx
+	jmp .ciclo2
+
+	.intercambio:
+	cmp edi, esi
+	je .siguiente
+
+	mov eax, [arr+esi*4]
+	mov edx, [arr+edi*4]
+
+	mov [arr+esi*4], edx
+	mov [arr+edi*4], eax
+
+	.siguiente:
+	inc esi
+	jmp .ciclo1
+	
+	.fin:
+	pop edi
+	pop esi
+	pop edx
+	pop ecx
+	pop ebx
+	pop eax
+	ret
+
 section	.data
     ncad db 0xa,'Arreglo: ',0
     nlin db 0xa
@@ -138,11 +208,3 @@ section	.data
     cad	times 64 db 0
     len db 5
     arr	dd 24,4,3,2,52
-
-    
-    numero dd 0
-    cociente dd 0
-    residuo dd 0
-    base dd 10
-    divBase dd 1000000000
-    divi dd 0
