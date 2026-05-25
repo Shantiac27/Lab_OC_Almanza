@@ -1,0 +1,152 @@
+/ PROGRAMA PRINCIPAL
+PROGRAMA, JNS CAPTURAR_SELECT
+JNS SWITCH
+JUMP PROGRAMA
+
+
+
+CAPTURAR_SELECT, HEX 000
+    INPUT
+    STORE SELECT
+    JUMPI CAPTURAR_SELECT
+
+
+SWITCH, HEX 000
+    // CASO 1: Solo capturar A y B
+    LOAD SELECT 
+    SUBT UNO 
+    SKIPCOND 400
+    JUMP CASO2
+    JNS CAPTURA
+    JUMPI SWITCH
+    
+    // CASO 2: Multiplicación
+    CASO2, LOAD SELECT   
+    SUBT DOS 
+    SKIPCOND 400
+    JUMP CASO3
+	load A
+    Store X
+	load B
+	Store Y
+    JNS MULTI
+	LOAD R
+	OUTPUT
+    JUMPI SWITCH
+    
+    // CASO 3: Potencia
+    CASO3, LOAD SELECT 
+    SUBT TRES
+    SKIPCOND 400
+    JUMP CASO4
+    JNS POTENCIA
+	LOAD R
+	OUTPUT
+    JUMPI SWITCH
+    
+    // CASO 4: Salir
+    CASO4, LOAD SELECT  
+    SUBT CUATRO
+    SKIPCOND 400
+    JUMPI SWITCH
+    HALT
+    
+
+// ========== SUBRUTINAS ==========
+//funcion captura ab
+CAPTURA,HEX 000
+        input
+        Store A
+		input
+        Store B
+JumpI CAPTURA
+
+//Funcion multi
+MULTI, HEX 000
+      CLEAR 
+	  STORE I
+      Clear
+	  STORE R
+	  Load X
+	  subt Y
+	  skipcond 800
+	  Jump MultiBA //B>A
+	  Jump MultiAB // A>B
+	  
+MultiAB, Load Y
+	     Subt I
+		 Skipcond 800
+		 JumpI MULTI //(y-i)>0
+		 load R
+		 add X
+		 Store R
+		 Load I
+		 add UNO
+		 Store I
+		 Jump MultiAB
+		 
+MultiBA, Load X
+	     Subt I
+		 Skipcond 800
+		 JumpI MULTI //(x-i)>0
+		 load R
+		 add Y
+		 Store R
+		 Load I
+		 add UNO
+		 Store I
+		 Jump MultiBA  
+
+POTENCIA, HEX 000
+          LOAD A
+		  STORE X
+		  LOAD A
+		  STORE Y
+		  LOAD B
+		  SUBT UNO
+		  STORE B
+		  SUBT UNO
+		  SKIPCOND 000
+		  Jump For
+		  JUMP EXP1
+		  
+For,      Load B
+          Subt J
+          skipcond 800 //(b - j) > 0
+          JumpI POTENCIA
+          Jns MULTI
+		  LOAD R
+		  STORE X
+          CLEAR
+		  Store I
+		  LOAD J
+		  ADD UNO
+		  STORE J
+		  Jump For
+
+EXP1,  LOAD B 
+       ADD UNO
+	   SKIPCOND 800
+	   JUMP EXP0
+       LOAD A
+       STORE R
+	   JUMPI POTENCIA
+	   
+EXP0,LOAD UNO
+      STORE R
+	  JUMPI POTENCIA
+
+
+A, DEC 0
+B, DEC 0 
+R, DEC 1
+I, DEC 0 
+X, DEC 0 
+Y, DEC 0
+J, DEC 0
+SELECT, DEC 0 
+CERO, DEC 0
+UNO, DEC 1
+DOS, DEC 2
+TRES, DEC 3
+CUATRO, DEC 4

@@ -1,0 +1,208 @@
+// PROGRAMA PRINCIPAL
+PROGRAMA, JNS CAPTURAR_SELECT
+JNS SWITCH
+JUMP PROGRAMA
+
+
+
+CAPTURAR_SELECT, HEX 000
+    INPUT
+    STORE SELECT
+    JUMPI CAPTURAR_SELECT
+
+SWITCH, HEX 000
+    // CASO 1: Convertir a minusculas
+    LOAD SELECT 
+    SUBT UNO 
+    SKIPCOND 400
+    JUMP CASO2
+	//REINICIO DE LA CADENA
+	LOAD INICIO
+	STORE PTR
+	Clear
+	STORE CTR
+    JNS MINUS
+	
+    JUMPI SWITCH
+    
+    // CASO 2: Convertir a mayusculas
+    CASO2, LOAD SELECT   
+    SUBT DOS 
+    SKIPCOND 400
+    JUMP CASO3
+	//REINICIO DE LA CADENA
+	LOAD INICIO
+	STORE PTR
+	CLEAR 
+	STORE CTR
+	JNS MAYUS
+	
+    JUMPI SWITCH
+    
+    // CASO 3: imprimir la cadena
+    CASO3, LOAD SELECT 
+    SUBT TRES
+    SKIPCOND 400
+    JUMP CASO4
+	//REINICIO DE CADENA
+	LOAD INICIO
+	STORE PTR
+	Clear
+	STORE CTR 
+	
+    JUMP LOOP
+    JUMPI SWITCH
+    
+    // CASO 4: Salir
+    CASO4, LOAD SELECT  
+    SUBT CUATRO
+    SKIPCOND 400
+    HALT
+    HALT
+
+/output loop
+LOOP, LOAD CTR
+      SUBT WORDS
+	  SKIPCOND 400
+	  JUMP PRINT
+	  JUMPI SWITCH
+
+PRINT, Load PTR
+/ output word
+       LoadI PTR
+       Output
+
+/ increment pointer
+       Load PTR
+       Add UNO
+       Store PTR
+
+/ increment counter
+       Load CTR
+       Add UNO
+       Store CTR
+
+	   JUMP LOOP
+
+MAYUS, HEX 000
+
+MAYUS1, LOAD CTR
+        SUBT WORDS
+        SKIPCOND 400
+        JUMP CONT_MAYUS
+        JUMPI MAYUS
+
+CONT_MAYUS, LOADI PTR
+            STORE TEMP
+
+        / verificar >= 97
+            LOAD TEMP
+            SUBT A_MIN
+            SKIPCOND 000
+            JUMP CHECK_MAYUS
+            JUMP NEXT_MAYUS
+
+CHECK_MAYUS, LOAD TEMP /verificar <= 122
+             SUBT Z_MIN
+             SKIPCOND 800
+             JUMP CONVERT_MAYUS
+             JUMP NEXT_MAYUS
+
+CONVERT_MAYUS, LOAD TEMP
+               SUBT DIF
+               STOREI PTR
+
+NEXT_MAYUS, LOAD PTR
+            ADD UNO
+            STORE PTR
+
+            LOAD CTR
+            ADD UNO
+            STORE CTR
+
+            JUMP MAYUS1
+
+MINUS, HEX 000
+
+MINUS1, LOAD CTR
+        SUBT WORDS
+        SKIPCOND 400
+        JUMP CONT_MINUS
+        JUMPI MINUS
+
+CONT_MINUS, LOADI PTR
+            STORE TEMP
+
+        / verificar >= 65
+        LOAD TEMP
+        SUBT A_MAY
+        SKIPCOND 000
+        JUMP CHECK_MINUS
+        JUMP NEXT_MINUS
+
+CHECK_MINUS,  LOAD TEMP / verificar =< 95
+        SUBT Z_MAY
+        SKIPCOND 800
+        JUMP CONVERT_MINUS
+        JUMP NEXT_MINUS
+
+CONVERT_MINUS, LOAD TEMP
+               ADD DIF
+               STOREI PTR
+
+NEXT_MINUS, LOAD PTR
+        ADD UNO
+        STORE PTR
+
+        LOAD CTR
+        ADD UNO
+        STORE CTR
+
+        JUMP MINUS1
+	   
+/print OrGaniZaciOn de Computadoras
+CADENA, DEC 79 /O	
+DEC 114 /r
+DEC 71	/G	
+DEC 97	/a
+DEC 110	 /n
+DEC 105	/i
+DEC 90	/Z
+DEC 97	/a
+DEC 99	/c
+DEC 105	/i
+DEC 79	/O
+DEC 110	/n
+DEC 32	/espacio
+DEC 100	/d
+DEC 101	/e
+DEC 32	/espacio
+DEC 67	/C
+DEC 111	/o
+DEC 77 /M
+DEC 112	/p
+DEC 117	/u
+DEC 116	/t
+DEC 97	/a
+DEC 100	/d
+DEC 111	/o
+DEC 114	/r
+DEC 97	/a
+DEC 115/s
+DEC 10	/salto de linea
+
+UNO, DEC 1
+DOS, DEC 2
+TRES, DEC 3
+CUATRO, DEC 4
+SELECT, DEC 0
+WORDS, DEC 29
+CTR,  DEC 0
+TEMP, dec 0
+DIF, DEC 32
+A_MAY, DEC 65
+Z_MAY, DEC 90
+A_MIN, DEC 97
+Z_MIN, DEC 122
+INICIO, ADR CADENA
+PTR, ADR CADENA

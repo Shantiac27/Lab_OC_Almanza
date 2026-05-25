@@ -1,0 +1,191 @@
+//Practica 3
+
+// PROGRAMA PRINCIPAL
+PROGRAMA, JNS CAPTURAR_SELECT
+JNS SWITCH
+JUMP PROGRAMA
+
+
+CAPTURAR_SELECT, HEX 000
+    INPUT
+    STORE SELECT
+    JUMPI CAPTURAR_SELECT
+
+
+SWITCH, HEX 000
+    // CASO 1: Solo capturar A y B
+    LOAD SELECT 
+    SUBT UNO 
+    SKIPCOND 400
+    JUMP CASO2
+    JNS CAPTURA_SHA_SHB
+    JUMPI SWITCH
+    
+    // CASO 2: PASO A LA  IZQUIERDA
+    CASO2, LOAD SELECT   
+    SUBT DOS 
+    SKIPCOND 400
+    JUMP CASO3
+    JNS SHIFTI
+    JUMPI SWITCH
+    
+    // CASO 3: PASO A LA DERECHA
+    CASO3, LOAD SELECT 
+    SUBT TRES
+    SKIPCOND 400
+    JUMP CASO4
+    JNS SHIFTD
+    JUMPI SWITCH
+    
+    // CASO 4: Salir
+    CASO4, LOAD SELECT  
+    SUBT CUATRO
+    SKIPCOND 400
+    JUMPI SWITCH
+    HALT
+    
+
+// ========== SUBRUTINAS ==========
+
+/SHIFT IZQUIERDA  (A << B)
+SHIFTI, HEX 000
+        CLEAR 
+		STORE J
+		STORE SHL_R
+		STORE I
+        JNS POTENCIA
+		LOAD SH_A
+		STORE X
+		LOAD SHL_R
+		STORE Y
+		JNS MULTI
+		LOAD SHL_R
+		OUTPUT 
+		JUMPI SHIFTI
+
+/SHIFT DERECHA (A >> B)
+SHIFTD, HEX 000
+        CLEAR 
+		STORE J
+		STORE SHL_R
+		STORE I
+		STORE SHR_R
+        JNS POTENCIA
+		LOAD SH_A
+		STORE DIV
+		LOAD SHL_R
+		STORE DIVISOR
+		JNS DIVISION
+		LOAD SHR_R
+		Output
+		JUMPI SHIFTD
+		
+
+//funcion captura ab
+CAPTURA_SHA_SHB,HEX 000
+        input
+        Store SH_A
+		input
+        Store SH_B
+JumpI CAPTURA_SHA_SHB
+
+/FUNCION DIVISION
+DIVISION, HEX 000
+WHILE, LOAD DIV
+       SKIPCOND 800
+       JUMPI DIVISION /FINALIZAR WHILE
+	   SUBT DIVISOR
+	   SKIPCOND 000
+	   JUMP IF  /FALSE -> IF
+ELSE, LOAD DIV
+      STORE RES  /TRUE -> ELSE
+	  JUMPI DIVISION
+IF, STORE DIV
+    LOAD UNO
+	ADD SHR_R
+	STORE SHR_R
+	JUMP WHILE
+
+//Funcion multi
+MULTI, HEX 000
+      Clear
+	  STORE SHL_R
+	  Load X
+	  subt Y
+	  skipcond 800
+	  Jump MultiBA //B>A
+	  Jump MultiAB // A>B
+	  
+MultiAB, Load Y
+	     Subt I
+		 Skipcond 800
+		 JumpI MULTI //(y-i)>0
+		 load SHL_R
+		 add X
+		 Store SHL_R
+		 Load I
+		 add UNO
+		 Store I
+		 Jump MultiAB
+		 
+MultiBA, Load X
+	     Subt I
+		 Skipcond 800
+		 JumpI MULTI //(x-i)>0
+		 load SHL_R
+		 add Y
+		 Store SHL_R
+		 Load I
+		 add UNO
+		 Store I
+		 Jump MultiBA  
+
+POTENCIA, HEX 000
+          LOAD DOS
+		  STORE X
+		  LOAD DOS
+		  STORE Y
+		  LOAD SH_B
+		  SUBT UNO
+		  STORE SH_B
+		  SUBT UNO
+		  SKIPCOND 000
+		  Jump For
+		  JUMP EXP1
+		  
+For,      Load SH_B
+          Subt J
+          skipcond 800 //(b - j) > 0
+          JumpI POTENCIA
+          Jns MULTI
+		  LOAD SHL_R
+		  STORE X
+          CLEAR
+		  Store I
+		  LOAD J
+		  ADD UNO
+		  STORE J
+		  Jump For
+
+EXP1,  LOAD SH_A
+       STORE SHL_R
+	   JUMPI POTENCIA
+
+
+SH_A, DEC 0
+SH_B, DEC 0 
+SHL_R, DEC 0
+DIV, DEC 0
+DIVISOR, DEC 0
+SHR_R, DEC 0
+RES, DEC 0
+I, DEC 0 
+X, DEC 0 
+Y, DEC 0
+J, DEC 0
+SELECT, DEC 0 
+CERO, DEC 0
+UNO, DEC 1
+DOS, DEC 2
+TRES, DEC 3
+CUATRO, DEC 4
